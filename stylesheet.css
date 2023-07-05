@@ -1,0 +1,30 @@
+button{
+    min-width: 50px;
+    padding: 0px;
+    color: transparent;
+    border-color: transparent;
+    background-color: transparent;
+}
+@keyframes flip {
+    from {width: 50px;height: 71px;}
+    to {width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;}
+}
+@keyframes flipback {
+    from {width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;}
+    to {width: 50px;height: 71px;}
+}
+button[anim="spinningback"] img{
+    animation-direction: alternate;
+    animation-name: flipback;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+button[anim="spinning"] img{
+    animation-direction: alternate;
+    animation-name: flip;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+body{
+    background-image: linear-gradient(to bottom, antiquewhite, grey);
+}

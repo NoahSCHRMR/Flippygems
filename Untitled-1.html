@@ -1,0 +1,122 @@
+<html>
+<header>
+    <link rel="stylesheet" href="stylesheet.css">
+</header>
+<body onload="load()">
+    <script> 
+    var rows = 9
+    var collumns = 9
+    var max = 7
+        function load(){ 
+            if (rows*collumns-1 < max){
+                max = rows*collumns-1
+            }    
+            document.getElementById("matched").innerHTML = 0
+            document.getElementById("rounds").innerHTML = 0
+            document.getElementById("flippedcard").innerHTML = "empty"
+            i = 1
+            document.getElementById("game").innerHTML=""
+            while (i<=rows) {
+                f = 1
+                document.getElementById("game").innerHTML = document.getElementById("game").innerHTML + '<div id="row'+String(i)+'"></div>'
+                while (f<=collumns) {
+                    document.getElementById("row"+String(i)).innerHTML = document.getElementById("row"+String(i)).innerHTML + '<button id = "'+String(i)+String(f)+'" onclick = "clickcard('+String(i)+String(f)+')"cardno = "" anim= "">'
+                    document.getElementById(String(i)+String(f)).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
+                    document.getElementById(String(i)+String(f)).setAttribute("cardno",String(randomcardval(max)))
+                    f = f + 1
+                }
+                i = i + 1
+            }        
+        }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        function getRandomInt(max) {
+            return 1 + Math.floor(Math.random() * (max-1));
+        }
+        function restart() { 
+           document.getElementById("matched").innerHTML = 0
+           document.getElementById("rounds").innerHTML = 0
+           document.getElementById("flippedcard").innerHTML = "empty"
+           i = 1
+           while (i<=rows) {
+            f = 1
+            while (f<=collumns) {
+                document.getElementById(String(i)+String(f)).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
+                document.getElementById(String(i)+String(f)).setAttribute("cardno",String(randomcardval(max)))
+                f = f + 1
+            }
+            i = i + 1
+           }
+        }
+        async function aniflip(card){
+            document.getElementById(card).setAttribute("anim","spinning")
+            await sleep(500)
+            document.getElementById(card).setAttribute("anim","spinningback")
+            await sleep(500)
+            document.getElementById(card).setAttribute("anim","")
+        }
+        async function htmldelay(card,html,delay){
+            await sleep(delay)
+            document.getElementById(card).innerHTML = html
+        }
+        function clickcard(card){
+            card = String(card)
+            aniflip(card)
+            temp = String(document.getElementById("flippedcard").innerHTML)
+            htmldelay(card,'<img src="./card_'+String(document.getElementById(card).getAttribute("cardno"))+'.png" alt="card back" width="50">',500)
+            if (temp == "empty"){
+                document.getElementById("flippedcard").innerHTML = card
+            }else{
+                if (card != temp){
+                document.getElementById("flippedcard").innerHTML = "empty"
+                document.getElementById("rounds").innerHTML = Number(document.getElementById("rounds").innerHTML)+1
+                if (document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
+                    document.getElementById("matched").innerHTML = Number(document.getElementById("matched").innerHTML)+1
+                    document.getElementById(card).setAttribute("cardno",String(randomcardval(max)))
+                    document.getElementById(temp).setAttribute("cardno",String(randomcardval(max)))
+                }
+                cradsresetimg(temp,card)
+            }
+            }
+        }
+        async function cradsresetimg(card1,card2){
+            await sleep(1100)
+            document.getElementById(card2).setAttribute("anim","spinning")
+            document.getElementById(card1).setAttribute("anim","spinning")
+            await sleep(500)
+            document.getElementById(card1).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
+            document.getElementById(card2).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
+            document.getElementById(card1).setAttribute("anim","spinningback")
+            document.getElementById(card2).setAttribute("anim","spinningback")
+            await sleep(500)
+            document.getElementById(card1).setAttribute("anim","")
+            document.getElementById(card2).setAttribute("anim","")
+        }
+        function randomcardval(){
+            return getRandomInt(Math.floor(max))
+        }
+    </script>
+       <button onclick = "load()">restart</button> 
+    <div id = "game">
+        <div id="row1">
+            <button id = "11" onclick = "clickcard(11)" cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "12" onclick = "clickcard(12)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "13" onclick = "clickcard(13)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+        </div>
+        <div id="row2">
+            <button id = "21" onclick = "clickcard(21)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "22" onclick = "clickcard(22)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "23" onclick = "clickcard(23)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+        </div>
+        <div id="row3">
+            <button id = "31" onclick = "clickcard(31)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "32" onclick = "clickcard(32)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+            <button id = "33" onclick = "clickcard(33)"cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
+        </div>
+    </div>
+</body>
+<var id="matched">0</var>
+<var id="rounds">0</var>
+<var id="flippedcard">empty</var>
+</html>
