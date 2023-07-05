@@ -1,3 +1,7 @@
+@font-face {
+    font-family: scoreboard;
+    src: url(MorrisRomanBlack.ttf);
+}
 button{
     min-width: 50px;
     padding: 0px;
@@ -24,6 +28,17 @@ button[anim="spinning"] img{
     animation-name: flip;
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
+}
+var[id="flippedcard"]{
+    color: transparent;
+}
+var{
+    font-family: scoreboard;
+    font-size: x-large;
+    margin-left: 25PX;
+}
+var[id~=""]{
+    margin-left: 0px;
 }
 body{
     background-image: linear-gradient(to bottom, antiquewhite, grey);
