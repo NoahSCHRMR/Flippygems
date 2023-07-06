@@ -57,10 +57,12 @@
                 while (unpickedcards.length > 0){
                     var cardno = String(randomcardval(max))
                     let temp = getRandomInt(unpickedcards.length)-1
-                    let cardtemp = unpickedcards.pop(temp)
+                    let cardtemp = unpickedcards[temp]
+                    unpickedcards.splice(temp,1)
                     document.getElementById(cardtemp).setAttribute("cardno",cardno)
                     temp = getRandomInt(unpickedcards.length)-1
-                    cardtemp = unpickedcards.pop(temp)
+                    cardtemp = unpickedcards[temp]
+                    unpickedcards.splice(temp,1)
                     document.getElementById(cardtemp).setAttribute("cardno",cardno)
                 }
             }
