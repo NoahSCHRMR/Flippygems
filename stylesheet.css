@@ -10,12 +10,12 @@ button{
     background-color: transparent;
 }
 @keyframes flip {
-    from {width: 50px;height: 71px;}
+    from {width: 50px;height: 71px;margin-left: 0px;margin-right:0px;}
     to {width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;}
 }
 @keyframes flipback {
     from {width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;}
-    to {width: 50px;height: 71px;}
+    to {width: 50px;height: 71px;margin-left: 0px;margin-right:0px;}
 }
 button[anim="spinningback"] img{
     animation-direction: alternate;

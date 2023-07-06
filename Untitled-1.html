@@ -8,6 +8,9 @@
     var collumns = 9
     var max = 7
         function load(){ 
+            if (Number(localStorage.getItem("flippygemshigh")) > 0){
+                document.getElementById("highscore").innerHTML = localStorage.getItem("flippygemshigh")
+            }
             if (rows*collumns-1 < max){
                 max = rows*collumns-1
             }    
@@ -73,6 +76,12 @@
                 document.getElementById("rounds").innerHTML = Number(document.getElementById("rounds").innerHTML)+1
                 if (document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
                     document.getElementById("matched").innerHTML = Number(document.getElementById("matched").innerHTML)+1
+                    if (Number(document.getElementById("matched").innerHTML) > Number(document.getElementById("highscore").innerHTML)){
+                        document.getElementById("highscore").innerHTML = document.getElementById("matched").innerHTML
+                        if  (document.getElementById("highscore").innerHTML > Number(localStorage.getItem("flippygemshigh"))){
+                            localStorage.setItem("flippygemshigh",Number(document.getElementById("highscore").innerHTML))
+                        }
+                    }
                     document.getElementById(card).setAttribute("cardno",String(randomcardval(max)))
                     document.getElementById(temp).setAttribute("cardno",String(randomcardval(max)))
                 }
@@ -121,5 +130,8 @@
 <br>
 <var>Gems Matched: </var>
 <var id="matched">0</var>
+<br>
+<var>High Score: </var>
+<var id="highscore">0</var>
 <var id="flippedcard">empty</var>
 </html>
