@@ -29,6 +29,9 @@ button[anim="spinning"] img{
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
 }
+button[anim="gone"] img{
+    width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;
+}
 var[id="flippedcard"]{
     color: transparent;
 }

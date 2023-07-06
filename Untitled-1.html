@@ -2,18 +2,30 @@
 <header>
     <link rel="stylesheet" href="stylesheet.css">
 </header>
-<body onload="load()">
+<body onload="loadcards()">
     <script> 
-    var rows = 9
+    var mode = "terminating"
+    var rows = 8
     var collumns = 9
+    var unpickedcards = []
+    var cardamounts = [0,0,0,0,0,0,0,0]
     var max = 7
-        function load(){ 
+    let click = new Audio("./mixkit-chord-swell-short-692.wav"); 
+    let match = new Audio("./fantasy_ui_button_6-102219.mp3"); 
+    let notmatch = new Audio("glass-bottle-shatter-13847.mp3"); 
+    let highscoreeffect = new Audio("./mixkit-wolves-pack-howling-1776.wav"); 
+        async function playaudio(sound,delay=0){
+            await sleep(delay)
+            sound.load()
+            sound.play()
+        }
+        function loadcards(){ 
             if (Number(localStorage.getItem("flippygemshigh")) > 0){
                 document.getElementById("highscore").innerHTML = localStorage.getItem("flippygemshigh")
             }
             if (rows*collumns-1 < max){
                 max = rows*collumns-1
-            }    
+            }
             document.getElementById("matched").innerHTML = 0
             document.getElementById("rounds").innerHTML = 0
             document.getElementById("flippedcard").innerHTML = "empty"
@@ -29,7 +41,37 @@
                     f = f + 1
                 }
                 i = i + 1
-            }        
+            }
+            listindex = 0
+            if (mode === "terminating"){
+                i = 1
+                while(i<=rows){
+                    f = 1
+                    while (f<=collumns){
+                        unpickedcards[listindex] = String(i)+String(f)
+                        f = f + 1
+                        listindex = listindex +1 
+                    }
+                    i = i + 1
+                }
+                while (unpickedcards.length > 0){
+                    var cardno = String(randomcardval(max))
+                    let temp = getRandomInt(unpickedcards.length)-1
+                    let cardtemp = unpickedcards.pop(temp)
+                    document.getElementById(cardtemp).setAttribute("cardno",cardno)
+                    temp = getRandomInt(unpickedcards.length)-1
+                    cardtemp = unpickedcards.pop(temp)
+                    document.getElementById(cardtemp).setAttribute("cardno",cardno)
+                }
+            }
+        }
+        async function removecard(card){
+            document.getElementById(card).setAttribute("onclick","none")
+            await sleep(1100)
+            document.getElementById(card).setAttribute("anim","spinning")
+            await sleep(500)
+            document.getElementById(card).setAttribute("anim","gone")
+            document.getElementById(card).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
         }
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -64,8 +106,10 @@
             document.getElementById(card).innerHTML = html
         }
         function clickcard(card){
+            document.getElementById(card).setAttribute("onclick","")
             card = String(card)
             aniflip(card)
+            playaudio(click)
             temp = String(document.getElementById("flippedcard").innerHTML)
             htmldelay(card,'<img src="./card_'+String(document.getElementById(card).getAttribute("cardno"))+'.png" alt="card back" width="50">',500)
             if (temp == "empty"){
@@ -75,18 +119,25 @@
                 document.getElementById("flippedcard").innerHTML = "empty"
                 document.getElementById("rounds").innerHTML = Number(document.getElementById("rounds").innerHTML)+1
                 if (document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
+                    playaudio(match,500)
                     document.getElementById("matched").innerHTML = Number(document.getElementById("matched").innerHTML)+1
                     if (Number(document.getElementById("matched").innerHTML) > Number(document.getElementById("highscore").innerHTML)){
                         document.getElementById("highscore").innerHTML = document.getElementById("matched").innerHTML
                         if  (document.getElementById("highscore").innerHTML > Number(localStorage.getItem("flippygemshigh"))){
+                            playaudio(highscoreeffect)
                             localStorage.setItem("flippygemshigh",Number(document.getElementById("highscore").innerHTML))
                         }
                     }
-                    document.getElementById(card).setAttribute("cardno",String(randomcardval(max)))
-                    document.getElementById(temp).setAttribute("cardno",String(randomcardval(max)))
+                    if (mode != "terminating"){
+                        document.getElementById(card).setAttribute("cardno",String(randomcardval(max)))
+                        document.getElementById(temp).setAttribute("cardno",String(randomcardval(max)))
+                    }
+                }else{playaudio(notmatch,500)}
+                if (mode === "terminating" && document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
+                    removecard(temp)
+                    removecard(card)
+                }else{cradsresetimg(temp,card)}
                 }
-                cradsresetimg(temp,card)
-            }
             }
         }
         async function cradsresetimg(card1,card2){
@@ -94,6 +145,8 @@
             document.getElementById(card2).setAttribute("anim","spinning")
             document.getElementById(card1).setAttribute("anim","spinning")
             await sleep(500)
+            document.getElementById(card1).setAttribute("onclick","clickcard("+String(card1)+")")
+            document.getElementById(card2).setAttribute("onclick","clickcard("+String(card2)+")")
             document.getElementById(card1).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
             document.getElementById(card2).innerHTML = '<img src="./card_0.png" alt="card back" width="50">'
             document.getElementById(card1).setAttribute("anim","spinningback")
@@ -106,7 +159,7 @@
             return getRandomInt(Math.floor(max))
         }
     </script>
-       <button onclick = "load()">restart</button> 
+       <button onclick = "loadcards()">restart</button> 
     <div id = "game">
         <div id="row1">
             <button id = "11" onclick = "clickcard(11)" cardno = ""><img src="./card_0.png" alt="card back" width="50"></button>
@@ -134,4 +187,7 @@
 <var>High Score: </var>
 <var id="highscore">0</var>
 <var id="flippedcard">empty</var>
+<audio>
+    <source id = "click"src="./mixkit-chord-swell-short-692.wav" type="audio/wav">
+</audio>
 </html>
