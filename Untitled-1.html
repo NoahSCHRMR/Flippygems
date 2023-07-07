@@ -4,12 +4,13 @@
 </header>
 <body onload="loadcards()">
     <script> 
+    localStorage.setItem("flippygemshigh",0)
     var mode = "terminating"
     var rows = 8
     var collumns = 9
     var unpickedcards = []
     var cardamounts = [0,0,0,0,0,0,0,0]
-    var max = 7
+    var max = 8
     let click = new Audio("./mixkit-chord-swell-short-692.wav"); 
     let match = new Audio("./fantasy_ui_button_6-102219.mp3"); 
     let notmatch = new Audio("glass-bottle-shatter-13847.mp3"); 
@@ -18,6 +19,16 @@
             await sleep(delay)
             sound.load()
             sound.play()
+        }
+        function getaccuracy(){
+            if (Number(document.getElementById("rounds").innerHTML === 0)){
+                return 0
+            }else{
+            return Number(document.getElementById("matched").innerHTML)/Number(document.getElementById("rounds").innerHTML)    
+            }
+        }
+        function updatescore(){
+            document.getElementById("score").innerHTML = Math.ceil(max*100*Math.pow(getaccuracy(),0.5)*Number(document.getElementById("matched").innerHTML))
         }
         function loadcards(){ 
             if (Number(localStorage.getItem("flippygemshigh")) > 0){
@@ -28,6 +39,7 @@
             }
             document.getElementById("matched").innerHTML = 0
             document.getElementById("rounds").innerHTML = 0
+            document.getElementById("score").innerHTML = 0
             document.getElementById("flippedcard").innerHTML = "empty"
             i = 1
             document.getElementById("game").innerHTML=""
@@ -123,8 +135,9 @@
                 if (document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
                     playaudio(match,500)
                     document.getElementById("matched").innerHTML = Number(document.getElementById("matched").innerHTML)+1
-                    if (Number(document.getElementById("matched").innerHTML) > Number(document.getElementById("highscore").innerHTML)){
-                        document.getElementById("highscore").innerHTML = document.getElementById("matched").innerHTML
+                    updatescore()
+                    if (Number(document.getElementById("score").innerHTML) > Number(document.getElementById("highscore").innerHTML)){
+                        document.getElementById("highscore").innerHTML = document.getElementById("score").innerHTML
                         if  (document.getElementById("highscore").innerHTML > Number(localStorage.getItem("flippygemshigh"))){
                             playaudio(highscoreeffect)
                             localStorage.setItem("flippygemshigh",Number(document.getElementById("highscore").innerHTML))
@@ -134,7 +147,9 @@
                         document.getElementById(card).setAttribute("cardno",String(randomcardval(max)))
                         document.getElementById(temp).setAttribute("cardno",String(randomcardval(max)))
                     }
-                }else{playaudio(notmatch,500)}
+                }else{playaudio(notmatch,500)
+                    updatescore()    
+                }
                 if (mode === "terminating" && document.getElementById(card).getAttribute("cardno")==document.getElementById(temp).getAttribute("cardno")){
                     removecard(temp)
                     removecard(card)
@@ -161,6 +176,7 @@
             return getRandomInt(Math.floor(max))
         }
     </script>
+    <div id = "wholegame">
        <button onclick = "loadcards()">restart</button> 
     <div id = "game">
         <div id="row1">
@@ -182,13 +198,15 @@
 </body>
 <var>Rounds Played: </var>
 <var id="rounds">0</var>
-<br>
 <var>Gems Matched: </var>
 <var id="matched">0</var>
 <br>
+<var>Score: </var>
+<var id="score">0</var>
 <var>High Score: </var>
 <var id="highscore">0</var>
 <var id="flippedcard">empty</var>
+</div>
 <audio>
     <source id = "click"src="./mixkit-chord-swell-short-692.wav" type="audio/wav">
 </audio>

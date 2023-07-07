@@ -2,6 +2,12 @@
     font-family: scoreboard;
     src: url(MorrisRomanBlack.ttf);
 }
+html {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
 button{
     min-width: 50px;
     padding: 0px;
@@ -29,8 +35,11 @@ button[anim="spinning"] img{
     animation-duration: 0.5s;
     animation-iteration-count: infinite;
 }
+div[id="wholegame"]{
+    align-self: center;
+}
 button[anim="gone"] img{
-    width: 0px;margin-left: 25px;margin-right: 25px;height: 71px;
+    opacity: 0%;
 }
 var[id="flippedcard"]{
     color: transparent;
